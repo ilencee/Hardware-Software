@@ -25,19 +25,19 @@ extern "C" {
 
 /* HEAT 加热负载 -> PB1 */
 #define TRIAC_HEAT_PORT     GPIOB
-#define TRIAC_HEAT_PIN      GPIO_PIN_1
+#define TRIAC_HEAT_PIN      GPIO_PIN_5
 
 /* PTC 加热负载  -> PB2 */
 #define TRIAC_PTC_PORT      GPIOB
-#define TRIAC_PTC_PIN       GPIO_PIN_2
+#define TRIAC_PTC_PIN       GPIO_PIN_4
 
 /* UVA 紫外灯    -> PB10 */
 #define TRIAC_UVA_PORT      GPIOB
-#define TRIAC_UVA_PIN       GPIO_PIN_10
+#define TRIAC_UVA_PIN       GPIO_PIN_0
 
 /* UVB 紫外灯    -> PB11 */
 #define TRIAC_UVB_PORT      GPIOB
-#define TRIAC_UVB_PIN       GPIO_PIN_11
+#define TRIAC_UVB_PIN       GPIO_PIN_1
 
 /* 四路负载全部在 GPIOB，时钟使能用 RCU_GPIOB */
 #define TRIAC_RCU           RCU_GPIOB
@@ -57,13 +57,13 @@ void Triac_Init(void);
  * @brief  导通指定负载通道（低电平有效：输出低电平触发光耦）
  * @param  ch 负载通道号（TRIAC_HEAT/TRIAC_PTC/TRIAC_UVA/TRIAC_UVB），无效值将被忽略
  */
-void Triac_SwitchOn(uint8_t ch);
+void Triac_On(uint8_t ch);
 
 /**
  * @brief  关断指定负载通道（低电平有效：输出高电平截止光耦）
  * @param  ch 负载通道号（TRIAC_HEAT/TRIAC_PTC/TRIAC_UVA/TRIAC_UVB），无效值将被忽略
  */
-void Triac_SwitchOff(uint8_t ch);
+void Triac_Off(uint8_t ch);
 
 /**
  * @brief  翻转指定负载通道输出状态
@@ -74,12 +74,12 @@ void Triac_Toggle(uint8_t ch);
 /**
  * @brief  导通全部负载通道
  */
-void Triac_SwitchOnAll(void);
+void Triac_OnAll(void);
 
 /**
  * @brief  关断全部负载通道
  */
-void Triac_SwitchOffAll(void);
+void Triac_OffAll(void);
 
 /* 各负载便捷开关函数（直接操作对应 IO 口，低电平有效） */
 void Triac_HeatOn(void);

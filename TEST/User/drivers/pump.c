@@ -25,12 +25,12 @@ void Pump_Init(void)
  * 注意：以下实现基于"高电平有效"（active-high）驱动电路假设。
  * 若硬件为低电平导通，需将 on/off 的置位逻辑互换。
  */
-void Pump_SwitchOn(void)
+void Pump_On(void)
 {
     gpio_bit_set(PUMP_PORT, PUMP_PIN);
 }
 
-void Pump_SwitchOff(void)
+void Pump_Off(void)
 {
     gpio_bit_reset(PUMP_PORT, PUMP_PIN);
 }

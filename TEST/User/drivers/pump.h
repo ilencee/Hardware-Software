@@ -31,12 +31,12 @@ void Pump_Init(void);
 /**
  * @brief  打开水泵（高电平有效）
  */
-void Pump_SwitchOn(void);
+void Pump_On(void);
 
 /**
  * @brief  关闭水泵（高电平有效）
  */
-void Pump_SwitchOff(void);
+void Pump_Off(void);
 
 #ifdef __cplusplus
 }
