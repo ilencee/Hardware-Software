@@ -49,7 +49,7 @@ void Triac_Init(void)
  * 若光耦为 MOC3021 等需触发脉冲的型号，须由应用层配合过零检测
  * （zero.c）在合适的相位角输出触发脉冲，本模块提供基础电平开关接口。
  */
-void Triac_SwitchOn(uint8_t ch)
+void Triac_On(uint8_t ch)
 {
     switch (ch) {
         case TRIAC_HEAT: gpio_bit_reset(TRIAC_HEAT_PORT, TRIAC_HEAT_PIN); break;
@@ -60,7 +60,7 @@ void Triac_SwitchOn(uint8_t ch)
     }
 }
 
-void Triac_SwitchOff(uint8_t ch)
+void Triac_Off(uint8_t ch)
 {
     switch (ch) {
         case TRIAC_HEAT: gpio_bit_set(TRIAC_HEAT_PORT, TRIAC_HEAT_PIN); break;
@@ -82,7 +82,7 @@ void Triac_Toggle(uint8_t ch)
     }
 }
 
-void Triac_SwitchOnAll(void)
+void Triac_OnAll(void)
 {
     gpio_bit_reset(TRIAC_HEAT_PORT, TRIAC_HEAT_PIN);
     gpio_bit_reset(TRIAC_PTC_PORT, TRIAC_PTC_PIN);
@@ -90,7 +90,7 @@ void Triac_SwitchOnAll(void)
     gpio_bit_reset(TRIAC_UVB_PORT, TRIAC_UVB_PIN);
 }
 
-void Triac_SwitchOffAll(void)
+void Triac_OffAll(void)
 {
     gpio_bit_set(TRIAC_HEAT_PORT, TRIAC_HEAT_PIN);
     gpio_bit_set(TRIAC_PTC_PORT, TRIAC_PTC_PIN);
@@ -99,11 +99,11 @@ void Triac_SwitchOffAll(void)
 }
 
 /* 各负载便捷开关函数 */
-void Triac_HeatOn(void)  { Triac_SwitchOn(TRIAC_HEAT); }
-void Triac_HeatOff(void) { Triac_SwitchOff(TRIAC_HEAT); }
-void Triac_PtcOn(void)   { Triac_SwitchOn(TRIAC_PTC); }
-void Triac_PtcOff(void)  { Triac_SwitchOff(TRIAC_PTC); }
-void Triac_UvaOn(void)   { Triac_SwitchOn(TRIAC_UVA); }
-void Triac_UvaOff(void)  { Triac_SwitchOff(TRIAC_UVA); }
-void Triac_UvbOn(void)   { Triac_SwitchOn(TRIAC_UVB); }
-void Triac_UvbOff(void)  { Triac_SwitchOff(TRIAC_UVB); }
+void Triac_HeatOn(void)  { Triac_On(TRIAC_HEAT); }
+void Triac_HeatOff(void) { Triac_Off(TRIAC_HEAT); }
+void Triac_PtcOn(void)   { Triac_On(TRIAC_PTC); }
+void Triac_PtcOff(void)  { Triac_Off(TRIAC_PTC); }
+void Triac_UvaOn(void)   { Triac_On(TRIAC_UVA); }
+void Triac_UvaOff(void)  { Triac_Off(TRIAC_UVA); }
+void Triac_UvbOn(void)   { Triac_On(TRIAC_UVB); }
+void Triac_UvbOff(void)  { Triac_Off(TRIAC_UVB); }

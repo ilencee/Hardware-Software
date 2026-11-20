@@ -25,12 +25,12 @@ void Fan_Init(void)
  * 注意：以下实现基于"高电平有效"（active-high）驱动电路假设。
  * 若硬件为低电平导通，需将 on/off 的置位逻辑互换。
  */
-void Fan_SwitchOn(void)
+void Fan_On(void)
 {
     gpio_bit_set(FAN_PORT, FAN_PIN);
 }
 
-void Fan_SwitchOff(void)
+void Fan_Off(void)
 {
     gpio_bit_reset(FAN_PORT, FAN_PIN);
 }

@@ -12,19 +12,18 @@
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>6240000::V6.24::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
-      <uMicroLib>1</uMicroLib>
       <TargetOption>
         <TargetCommonOption>
-          <Device>GD32E235C8</Device>
+          <Device>GD32E235CB</Device>
           <Vendor>GigaDevice</Vendor>
           <PackID>GigaDevice.GD32E23x_DFP.2.5.0</PackID>
           <PackURL>http://gd32mcu.com/data/documents/pack/</PackURL>
-          <Cpu>IRAM(0x20000000,0x0002000) IROM(0x08000000,0x0010000) CPUTYPE("Cortex-M23") CLOCK(12000000) ELITTLE</Cpu>
+          <Cpu>IRAM(0x20000000,0x0004000) IROM(0x08000000,0x0020000) CPUTYPE("Cortex-M23") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2V8M(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0GD32E23x -FS08000000 -FL010000 -FP0($$Device:GD32E235C8$Flash\GD32E23x.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2V8M(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0GD32E23x -FS08000000 -FL020000 -FP0($$Device:GD32E235CB$Flash\GD32E23x.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
-          <RegisterFile>$$Device:GD32E235C8$Device\Include\gd32e23x.h</RegisterFile>
+          <RegisterFile>$$Device:GD32E235CB$Device\Include\gd32e23x.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -34,7 +33,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:GD32E235C8$SVD\GD32E23x.svd</SFDFile>
+          <SFDFile>$$Device:GD32E235CB$SVD\GD32E23x.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -112,8 +111,8 @@
         <DllOption>
           <SimDllName></SimDllName>
           <SimDllArguments></SimDllArguments>
-          <SimDlgDll>SARMCM3.DLL</SimDlgDll>
-          <SimDlgDllArguments>-pGD32E235</SimDlgDllArguments>
+          <SimDlgDll></SimDlgDll>
+          <SimDlgDllArguments></SimDlgDllArguments>
           <TargetDllName>SARMV8M.DLL</TargetDllName>
           <TargetDllArguments></TargetDllArguments>
           <TargetDlgDll>TCM.DLL</TargetDlgDll>
@@ -248,12 +247,12 @@
               <IRAM>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x2000</Size>
+                <Size>0x4000</Size>
               </IRAM>
               <IROM>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x10000</Size>
+                <Size>0x20000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>
@@ -278,7 +277,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x10000</Size>
+                <Size>0x20000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -303,7 +302,7 @@
               <OCR_RVCT9>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x2000</Size>
+                <Size>0x4000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
@@ -341,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>GD32E235</Define>
               <Undefine></Undefine>
-              <IncludePath>..\User;..\User\core;..\User\drivers;..\User\app;..\Libraries\CMSIS\GD\GD32E23x\Include;..\Libraries\GD32E23x_standard_peripheral\Include;..\Libraries\CMSIS;D:\Software\Keil\ARM\ARMCLANG\include</IncludePath>
+              <IncludePath>..\User;..\User\core;..\User\drivers;..\User\app;..\Libraries\CMSIS\GD\GD32E23x\Include;..\Libraries\GD32E23x_standard_peripheral\Include;..\Libraries\CMSIS;D:\Software\Keil\ARM\ARMCLANG\include;..\User\drivers</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -539,6 +538,11 @@
               <FileName>triac.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\drivers\triac.c</FilePath>
+            </File>
+            <File>
+              <FileName>Pwr12.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\drivers\Pwr12.c</FilePath>
             </File>
           </Files>
         </Group>

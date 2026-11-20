@@ -33,12 +33,12 @@ void Fan_Init(void);
 /**
  * @brief  打开风扇（高电平有效）
  */
-void Fan_SwitchOn(void);
+void Fan_On(void);
 
 /**
  * @brief  关闭风扇（高电平有效）
  */
-void Fan_SwitchOff(void);
+void Fan_Off(void);
 
 #ifdef __cplusplus
 }
