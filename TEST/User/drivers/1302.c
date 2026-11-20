@@ -11,16 +11,16 @@
  * @version V1.0.0
  */
 
-#include <stddef.h>   /* NULL */
+#include <stddef.h> /* NULL */
 #include "1302.h"
 
 /* ===== 内部辅助：CE/SCLK 电平与 IO 方向控制 ===== */
-#define DS1302_CE_HIGH()      gpio_bit_set(DS1302_CE_PORT, DS1302_CE_PIN)
-#define DS1302_CE_LOW()       gpio_bit_reset(DS1302_CE_PORT, DS1302_CE_PIN)
-#define DS1302_SCLK_HIGH()    gpio_bit_set(DS1302_SCLK_PORT, DS1302_SCLK_PIN)
-#define DS1302_SCLK_LOW()     gpio_bit_reset(DS1302_SCLK_PORT, DS1302_SCLK_PIN)
-#define DS1302_IO_HIGH()      gpio_bit_set(DS1302_IO_PORT, DS1302_IO_PIN)
-#define DS1302_IO_LOW()       gpio_bit_reset(DS1302_IO_PORT, DS1302_IO_PIN)
+#define DS1302_CE_HIGH() gpio_bit_set(DS1302_CE_PORT, DS1302_CE_PIN)
+#define DS1302_CE_LOW() gpio_bit_reset(DS1302_CE_PORT, DS1302_CE_PIN)
+#define DS1302_SCLK_HIGH() gpio_bit_set(DS1302_SCLK_PORT, DS1302_SCLK_PIN)
+#define DS1302_SCLK_LOW() gpio_bit_reset(DS1302_SCLK_PORT, DS1302_SCLK_PIN)
+#define DS1302_IO_HIGH() gpio_bit_set(DS1302_IO_PORT, DS1302_IO_PIN)
+#define DS1302_IO_LOW() gpio_bit_reset(DS1302_IO_PORT, DS1302_IO_PIN)
 
 /**
  * @brief  微秒级延时（软件空循环）
@@ -30,7 +30,8 @@
 static void ds1302_delay_us(uint32_t us)
 {
     volatile uint32_t i;
-    for (i = 0U; i < (us * 72U); i++) {
+    for (i = 0U; i < (us * 72U); i++)
+    {
         __NOP();
     }
 }
@@ -58,17 +59,22 @@ static void ds1302_io_input(void)
 static void ds1302_write_byte(uint8_t byte)
 {
     uint8_t i;
-    for (i = 0U; i < 8U; i++) {
-        if ((byte & (1U << i)) != 0U) {
+    for (i = 0U; i < 8U; i++)
+    {
+        if (byte & 0x01U)
+        {
             DS1302_IO_HIGH();
-        } else {
+        }
+        else
+        {
             DS1302_IO_LOW();
         }
         ds1302_delay_us(1U);
-        DS1302_SCLK_HIGH();          /* 上升沿：DS1302 锁存数据 */
+        DS1302_SCLK_HIGH(); /* 上升沿：DS1302 锁存数据 */
         ds1302_delay_us(1U);
         DS1302_SCLK_LOW();
         ds1302_delay_us(1U);
+        byte >>= 1;
     }
 }
 
@@ -79,7 +85,8 @@ static uint8_t ds1302_read_byte(void)
 {
     uint8_t i;
     uint8_t byte = 0U;
-    for (i = 0U; i < 8U; i++) {
+    for (i = 0U; i < 8U; i++)
+    {
         DS1302_SCLK_HIGH();
         ds1302_delay_us(1U);
         DS1302_SCLK_LOW();
@@ -116,16 +123,16 @@ void Rtc1302_Init(void)
  */
 void Rtc1302_WriteReg(uint8_t reg, uint8_t data)
 {
-    ds1302_io_output();
+    ds1302_io_output();//设置为推挽输出
     DS1302_SCLK_LOW();
-    DS1302_CE_LOW();
+    DS1302_CE_LOW(); /* 确保起始态：CE=SCLK=低 */
     ds1302_delay_us(1U);
 
-    DS1302_CE_HIGH();                /* CE 拉高启动传输 */
+    DS1302_CE_HIGH(); /* CE 上升沿：通知 DS1302 开始一次传输 */
     ds1302_delay_us(1U);
-    ds1302_write_byte(reg);          /* 命令字节（bit0=0 表示写） */
-    ds1302_write_byte(data);         /* 数据字节 */
-    DS1302_CE_LOW();                 /* CE 拉低结束传输 */
+    ds1302_write_byte(reg);  /* 命令字节：每位在 SCLK 上升沿被 DS1302 采样（bit0=0 写） */
+    ds1302_write_byte(data); /* 数据字节：紧跟命令字节，同样 SCLK 上升沿采样 */
+    DS1302_CE_LOW();         /* CE 拉低：结束本次传输，DS1302 锁存到寄存器 */
     ds1302_delay_us(1U);
 }
 
@@ -142,15 +149,15 @@ uint8_t Rtc1302_ReadReg(uint8_t reg)
     DS1302_CE_LOW();
     ds1302_delay_us(1U);
 
-    DS1302_CE_HIGH();                /* CE 拉高启动传输 */
+    DS1302_CE_HIGH(); /* CE 拉高启动传输 */
     ds1302_delay_us(1U);
-    ds1302_write_byte(reg | 0x01U);  /* 命令字节（bit0=1 表示读） */
-    ds1302_io_input();               /* IO 切输入，等待 DS1302 驱动 */
+    ds1302_write_byte(reg | 0x01U); /* 命令字节（bit0=1 表示读） */
+    ds1302_io_input();              /* IO 切输入，等待 DS1302 驱动 */
     ds1302_delay_us(1U);
     data = ds1302_read_byte();
-    DS1302_CE_LOW();                 /* CE 拉低结束传输 */
+    DS1302_CE_LOW(); /* CE 拉低结束传输 */
     ds1302_delay_us(1U);
-    ds1302_io_output();              /* 恢复输出态，避免悬空 */
+    ds1302_io_output(); /* 恢复输出态，避免悬空 */
     return data;
 }
 
@@ -181,18 +188,20 @@ void Rtc1302_WriteProtect(uint8_t en)
  */
 void Rtc1302_SetTime(const rtc1302_time_t *t)
 {
-    if (t == NULL) {
+    if (t == NULL)
+    {
         return;
     }
-    Rtc1302_WriteProtect(0U);                         /* 关写保护 */
-    Rtc1302_WriteReg(DS1302_REG_SEC,   (uint8_t)(ds1302_dec2bcd(t->sec) & 0x7FU));  /* 清 CH 位，启动走时 */
-    Rtc1302_WriteReg(DS1302_REG_MIN,   ds1302_dec2bcd(t->min));
-    Rtc1302_WriteReg(DS1302_REG_HOUR,  (uint8_t)(ds1302_dec2bcd(t->hour) & 0x3FU)); /* bit7=0 固定 24 小时制 */
-    Rtc1302_WriteReg(DS1302_REG_DAY,   ds1302_dec2bcd(t->day));
+    Rtc1302_WriteProtect(0U);                                  /* 关写保护 */
+    Rtc1302_WriteReg(DS1302_REG_SEC, 0x00U);                   /* CH=0，启动走时，秒清零 */
+    Rtc1302_WriteReg(DS1302_REG_SEC, ds1302_dec2bcd(t->sec));  /* 写秒值 */
+    Rtc1302_WriteReg(DS1302_REG_MIN, ds1302_dec2bcd(t->min));
+    Rtc1302_WriteReg(DS1302_REG_HOUR, (uint8_t)(ds1302_dec2bcd(t->hour) & 0x3FU)); /* bit7=0 固定 24 小时制 */
+    Rtc1302_WriteReg(DS1302_REG_DAY, ds1302_dec2bcd(t->day));
     Rtc1302_WriteReg(DS1302_REG_MONTH, ds1302_dec2bcd(t->month));
-    Rtc1302_WriteReg(DS1302_REG_WEEK,  ds1302_dec2bcd(t->week));
-    Rtc1302_WriteReg(DS1302_REG_YEAR,  ds1302_dec2bcd(t->year));
-    Rtc1302_WriteProtect(1U);                         /* 恢复写保护 */
+    Rtc1302_WriteReg(DS1302_REG_WEEK, ds1302_dec2bcd(t->week));
+    Rtc1302_WriteReg(DS1302_REG_YEAR, ds1302_dec2bcd(t->year));
+    Rtc1302_WriteProtect(1U); /* 恢复写保护 */
 }
 
 /**
@@ -201,14 +210,15 @@ void Rtc1302_SetTime(const rtc1302_time_t *t)
  */
 void Rtc1302_GetTime(rtc1302_time_t *t)
 {
-    if (t == NULL) {
+    if (t == NULL)
+    {
         return;
     }
-    t->sec   = ds1302_bcd2dec((uint8_t)(Rtc1302_ReadReg(DS1302_REG_SEC) & 0x7FU));
-    t->min   = ds1302_bcd2dec(Rtc1302_ReadReg(DS1302_REG_MIN));
-    t->hour  = ds1302_bcd2dec((uint8_t)(Rtc1302_ReadReg(DS1302_REG_HOUR) & 0x3FU)); /* 屏蔽 12/24 与 AP 位 */
-    t->day   = ds1302_bcd2dec(Rtc1302_ReadReg(DS1302_REG_DAY));
+    t->sec = ds1302_bcd2dec((uint8_t)(Rtc1302_ReadReg(DS1302_REG_SEC) & 0x7FU));
+    t->min = ds1302_bcd2dec(Rtc1302_ReadReg(DS1302_REG_MIN));
+    t->hour = ds1302_bcd2dec((uint8_t)(Rtc1302_ReadReg(DS1302_REG_HOUR) & 0x3FU)); /* 屏蔽 12/24 与 AP 位 */
+    t->day = ds1302_bcd2dec(Rtc1302_ReadReg(DS1302_REG_DAY));
     t->month = ds1302_bcd2dec(Rtc1302_ReadReg(DS1302_REG_MONTH));
-    t->week  = ds1302_bcd2dec(Rtc1302_ReadReg(DS1302_REG_WEEK));
-    t->year  = ds1302_bcd2dec(Rtc1302_ReadReg(DS1302_REG_YEAR));
+    t->week = ds1302_bcd2dec(Rtc1302_ReadReg(DS1302_REG_WEEK));
+    t->year = ds1302_bcd2dec(Rtc1302_ReadReg(DS1302_REG_YEAR));
 }

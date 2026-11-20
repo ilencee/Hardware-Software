@@ -8,6 +8,12 @@
 - 头文件风格：ilencee 头注释、`@version V1.x.x`、`extern "C"` 包裹、include guard `_XXX_H_`。
 - 变更后需用工程 ARMCLANG `-fsyntax-only` 验证（`D:\Software\Keil\ARM\ARMCLANG\bin\armclang.exe`，`-mcpu=cortex-m23 -DGD32E235`，include 路径见 .vscode/c_cpp_properties.json 或命令行历史）。
 
+## DS1302 驱动（1302.c）重构记录
+
+- 删除了半成品函数 `ds1302_read`（宏名错误 `DS1302_CLK_LOW` 未定义、循环未读数据）和 `ds1302_write`（死代码、CE 管理不完整）。
+- 底层只保留 `ds1302_write_byte` / `ds1302_read_byte`，CE 时序统一由 `Rtc1302_WriteReg` / `Rtc1302_ReadReg` 管理。
+- `ds1302_write_byte` 取位方式统一为 `byte & 0x01U` + `byte >>= 1`（LSB 先行，直观）。
+
 ## 工程结构（GD32E235，Keil 工程）
 
 - 工作区 `c:\Users\86249\Desktop\Embedded\TEST`（原 MOVA 文件夹，已重命名）。
